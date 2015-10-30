@@ -2,6 +2,7 @@
 
 namespace Lstr\YoPdo;
 
+use PDO;
 use PDOException;
 use PHPUnit_Framework_TestCase;
 
@@ -9,10 +10,10 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
 {
     public function testPdoConnectionCanBeRetrieved()
     {
-        $db = new YoPdo($this->getConfig());
+        $config = $this->getConfig();
+        $pdo = new PDO($config['dsn'], $config['username'], $config['password']);
+        $db = new YoPdo($pdo);
 
-        $pdo = $db->getPdo();
-        $this->assertInstanceOf('PDO', $pdo);
         $this->assertSame($pdo, $db->getPdo());
     }
 
@@ -164,7 +165,8 @@ SQL;
      */
     public function dbProvider()
     {
-        $db = new YoPdo($this->getConfig());
+        $factory = new Factory();
+        $db = $factory->createFromConfig($this->getConfig());
 
         return array(
             array($db),

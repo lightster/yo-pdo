@@ -8,21 +8,16 @@ use PDOStatement;
 class YoPdo
 {
     /**
-     * @var array
-     */
-    private $config;
-
-    /**
      * @var PDO
      */
     private $pdo;
 
     /**
-     * @param array $config
+     * @param PDO $pdo
      */
-    public function __construct(array $config)
+    public function __construct(PDO $pdo)
     {
-        $this->config = $config;
+        $this->pdo = $pdo;
     }
 
     /**
@@ -30,19 +25,6 @@ class YoPdo
      */
     public function getPdo()
     {
-        if (null !== $this->pdo) {
-            return $this->pdo;
-        }
-
-        $dsn      = $this->config['dsn'];
-        $username = isset($this->config['username']) ? $this->config['username'] : null;
-        $password = isset($this->config['password']) ? $this->config['password'] : null;
-        $options  = isset($this->config['driver_options']) ? $this->config['driver_options'] : null;
-
-        $this->pdo = new PDO($dsn, $username, $password, $options);
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
         return $this->pdo;
     }
 
