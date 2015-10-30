@@ -1,0 +1,23 @@
+{
+    "name": "lightster/yo-pdo",
+    "description": "Useful add-ons to PDO",
+    "keywords": [
+        "pdo",
+        "lstr",
+        "lightster",
+        "database"
+    ],
+    "homepage": "http://lightdatasys.com",
+    "autoload": {
+        "psr-4": {
+            "Lstr\\YoPdo\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8.0",
+        "codeclimate/php-test-reporter": "dev-master"
+    }
+}
