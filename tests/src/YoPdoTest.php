@@ -115,24 +115,19 @@ SQL;
      */
     public function testUpdateRecordsUsingCustomPlaceholderNames($yo_pdo)
     {
-        $rows = array(
-            1 => array('a' => 4, 'b' => 7),
-            2 => array('a' => 5, 'b' => 8),
-            3 => array('a' => 6, 'b' => 9),
+        $this->assertUpdated(
+            $yo_pdo,
+            function ($table_name, $condition) use ($yo_pdo) {
+                $yo_pdo->update(
+                    $table_name,
+                    array('a' => 'some_number', 'b' => 'some_number'),
+                    $condition,
+                    array('some_number' => 112)
+                );
+
+                return array('a' => 112, 'b' => 112);
+            }
         );
-        $table_name = $this->createPopulatedTable($yo_pdo, $rows);
-
-        $expected = $rows;
-        $expected[2] = array('a' => 112, 'b' => 112);
-
-        $yo_pdo->update(
-            $table_name,
-            array('a' => 'some_number', 'b' => 'some_number'),
-            'id = 2',
-            array('some_number' => 112)
-        );
-
-        $this->assertResults($yo_pdo, $table_name, $expected);
     }
 
     /**
@@ -140,24 +135,21 @@ SQL;
      */
     public function testUpdateRecordsUsingColumnNamesAsPlaceholderNames($yo_pdo)
     {
-        $rows = array(
-            1 => array('a' => 4, 'b' => 7),
-            2 => array('a' => 5, 'b' => 8),
-            3 => array('a' => 6, 'b' => 9),
+        $this->assertUpdated(
+            $yo_pdo,
+            function ($table_name, $condition) use ($yo_pdo) {
+                $expected = array('a' => 102, 'b' => 120);
+
+                $yo_pdo->update(
+                    $table_name,
+                    array('a', 'b'),
+                    $condition,
+                    $expected
+                );
+
+                return $expected;
+            }
         );
-        $table_name = $this->createPopulatedTable($yo_pdo, $rows);
-
-        $expected = $rows;
-        $expected[2] = array('a' => 102, 'b' => 120);
-
-        $yo_pdo->update(
-            $table_name,
-            array('a', 'b'),
-            'id = 2',
-            $expected[2]
-        );
-
-        $this->assertResults($yo_pdo, $table_name, $expected);
     }
 
     /**
@@ -226,6 +218,25 @@ SQL;
         $this->populateTable($yo_pdo, $table_name, $rows);
 
         return $table_name;
+    }
+
+    /**
+     * @param YoPdo $yo_pdo
+     * @param callable $run_update
+     */
+    private function assertUpdated(YoPdo $yo_pdo, callable $run_update)
+    {
+        $rows = array(
+            1 => array('a' => 4, 'b' => 7),
+            2 => array('a' => 5, 'b' => 8),
+            3 => array('a' => 6, 'b' => 9),
+        );
+        $table_name = $this->createPopulatedTable($yo_pdo, $rows);
+
+        $expected = $rows;
+        $expected[2] = $run_update($table_name, 'id = 2');
+
+        $this->assertResults($yo_pdo, $table_name, $expected);
     }
 
     /**
