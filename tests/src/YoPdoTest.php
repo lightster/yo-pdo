@@ -84,11 +84,7 @@ SQL;
      */
     public function testInsert($yo_pdo)
     {
-        $rows = array(
-            1 => array('a' => 3, 'b' => 6),
-            2 => array('a' => 2, 'b' => 4),
-            3 => array('a' => 1, 'b' => 2),
-        );
+        $rows = $this->getSampleRows();
 
         $table_name = $this->createTable($yo_pdo);
         foreach ($rows as $row) {
@@ -226,11 +222,7 @@ SQL;
      */
     private function assertUpdated(YoPdo $yo_pdo, $run_update)
     {
-        $rows = array(
-            1 => array('a' => 4, 'b' => 7),
-            2 => array('a' => 5, 'b' => 8),
-            3 => array('a' => 6, 'b' => 9),
-        );
+        $rows = $this->getSampleRows();
         $table_name = $this->createPopulatedTable($yo_pdo, $rows);
 
         $expected = $rows;
@@ -264,5 +256,17 @@ SQL;
                 $this->assertEquals($expected_result, $row);
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getSampleRows()
+    {
+        return array(
+            1 => array('a' => 3, 'b' => 6),
+            2 => array('a' => 2, 'b' => 4),
+            3 => array('a' => 1, 'b' => 2),
+        );
     }
 }
