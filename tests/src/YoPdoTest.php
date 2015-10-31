@@ -224,7 +224,7 @@ SQL;
      * @param YoPdo $yo_pdo
      * @param callable $run_update
      */
-    private function assertUpdated(YoPdo $yo_pdo, callable $run_update)
+    private function assertUpdated(YoPdo $yo_pdo, $run_update)
     {
         $rows = array(
             1 => array('a' => 4, 'b' => 7),
