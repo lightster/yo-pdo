@@ -122,6 +122,22 @@ class YoPdo
     }
 
     /**
+     * @param string $tablename
+     * @param string $where_sql
+     * @param array $values
+     */
+    public function delete($tablename, $where_sql, array $values)
+    {
+        $this->query(
+            "
+                DELETE FROM {$tablename}
+                WHERE {$where_sql}
+            ",
+            $values
+        );
+    }
+
+    /**
      * @param string $sql
      * @param array $params
      * @param array $options

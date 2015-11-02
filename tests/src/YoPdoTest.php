@@ -149,6 +149,26 @@ SQL;
     }
 
     /**
+     * @dataProvider dbProvider
+     */
+    public function testDeleteRecord($yo_pdo)
+    {
+        $rows = $this->getSampleRows();
+        $table_name = $this->createPopulatedTable($yo_pdo, $rows);
+
+        $expected = $rows;
+        unset($expected[2]);
+
+        $yo_pdo->delete(
+            $table_name,
+            "id = :id",
+            array('id' => 2)
+        );
+
+        $this->assertResults($yo_pdo, $table_name, $expected);
+    }
+
+    /**
      * @return array
      */
     public function dbProvider()
