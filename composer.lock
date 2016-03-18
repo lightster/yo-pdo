@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a132d82d275ccd897c02b9a238b0920d",
-    "content-hash": "30d0dfb41a61ad6f1cc364d5af49a0b0",
+    "hash": "fbc064006012e490a89eda35e88d4794",
+    "content-hash": "93e95908acbc898f50dd82a586f19965",
     "packages": [],
     "packages-dev": [
         {
@@ -18,7 +18,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/892163d67e3bd9c190d43655acb69657da765c7b",
+                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/a026a4bc86867129e760b95dca44b8cd10819333",
                 "reference": "892163d67e3bd9c190d43655acb69657da765c7b",
                 "shasum": ""
             },
@@ -1179,7 +1179,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/831f88908b51b9ce945f5e6f402931d1ac544423",
+                "url": "https://api.github.com/repos/symfony/config/zipball/524bc2ef778f99df0ba09f8985b23a379c668879",
                 "reference": "831f88908b51b9ce945f5e6f402931d1ac544423",
                 "shasum": ""
             },
@@ -1476,7 +1476,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3"
+        "php": ">=5.5"
     },
     "platform-dev": []
 }
