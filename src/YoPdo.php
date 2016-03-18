@@ -41,6 +41,19 @@ class YoPdo
     /**
      * @param string $sql
      * @param array $params
+     * @return generator
+     */
+    public function getSelectRowGenerator($sql, array $params = array())
+    {
+        $result = $this->query($sql, $params);
+        while ($row = $result->fetch()) {
+            yield $row;
+        }
+    }
+
+    /**
+     * @param string $sql
+     * @param array $params
      * @return PDOStatement
      */
     public function queryMultiple($sql, array $params = array())

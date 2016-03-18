@@ -53,6 +53,30 @@ SQL;
     /**
      * @dataProvider dbProvider
      */
+    public function testARowGeneratorCanBeUsed($yo_pdo)
+    {
+        $sql = <<<SQL
+SELECT :param_a AS col UNION
+SELECT :param_b AS col UNION
+SELECT :last_param AS col
+ORDER BY col
+SQL;
+
+        $result = $yo_pdo->getSelectRowGenerator($sql, array(
+            'param_a'    => 1,
+            'param_b'    => 2,
+            'last_param' => 3,
+        ));
+        $count = 1;
+        foreach($result as $row) {
+            $this->assertEquals($count, $row['col']);
+            ++$count;
+        }
+    }
+
+    /**
+     * @dataProvider dbProvider
+     */
     public function testMultipleQueriesCanBeRan($yo_pdo)
     {
         $table_name = $this->createTable($yo_pdo);
