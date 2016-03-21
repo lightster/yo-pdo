@@ -13,6 +13,11 @@
             "Lstr\\YoPdo\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Lstr\\YoPdo\\": "tests/src/"
+        }
+    },
     "require": {
         "php": ">=5.5"
     },
