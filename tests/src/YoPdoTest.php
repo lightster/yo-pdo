@@ -3,6 +3,7 @@
 namespace Lstr\YoPdo;
 
 use Lstr\YoPdo\TestUtil\QueryResultAsserter;
+use Lstr\YoPdo\TestUtil\SampleTableCreator;
 use PDO;
 use PDOException;
 use PHPUnit_Framework_TestCase;
@@ -14,9 +15,15 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
      */
     private $query_result_asserter;
 
+    /**
+     * @var SampleTableCreator
+     */
+    private $sample_table_creator;
+
     public function setUp()
     {
         $this->query_result_asserter = new QueryResultAsserter($this);
+        $this->sample_table_creator = new SampleTableCreator();
     }
 
     public function testPdoConnectionCanBeRetrieved()
@@ -90,7 +97,7 @@ SQL;
      */
     public function testMultipleQueriesCanBeRan($yo_pdo)
     {
-        $table_name = $this->createTable($yo_pdo);
+        $table_name = $this->sample_table_creator->createTable($yo_pdo);
         $sql = <<<SQL
 INSERT INTO {$table_name} (a, b) VALUES (:row_1_col_a, :row_1_col_b);
 INSERT INTO {$table_name} (a, b) VALUES (:row_2_col_a, :row_2_col_b);
@@ -121,7 +128,7 @@ SQL;
     {
         $rows = $this->getSampleRows();
 
-        $table_name = $this->createTable($yo_pdo);
+        $table_name = $this->sample_table_creator->createTable($yo_pdo);
         foreach ($rows as $row) {
             $yo_pdo->insert($table_name, $row);
         }
@@ -134,7 +141,7 @@ SQL;
      */
     public function testLastInsertIdCanBeRetrieved($yo_pdo)
     {
-        $table_name = $this->createTable($yo_pdo);
+        $table_name = $this->sample_table_creator->createTable($yo_pdo);
         for ($i = 1; $i <= 3; $i++) {
             $yo_pdo->insert($table_name, array('a' => $i + 5, 'b' => $i + 10));
             $this->assertEquals($i, $yo_pdo->getLastInsertId("{$table_name}_id_seq"));
@@ -189,7 +196,7 @@ SQL;
     public function testDeleteRecord($yo_pdo)
     {
         $rows = $this->getSampleRows();
-        $table_name = $this->createPopulatedTable($yo_pdo, $rows);
+        $table_name = $this->sample_table_creator->createPopulatedTable($yo_pdo, $rows);
 
         $expected = $rows;
         unset($expected[2]);
@@ -228,57 +235,12 @@ SQL;
 
     /**
      * @param YoPdo $yo_pdo
-     * @return string
-     */
-    private function createTable(YoPdo $yo_pdo)
-    {
-        $table_name = 'test_' . uniqid();
-        $sql = <<<SQL
-CREATE SEQUENCE {$table_name}_id_seq;
-CREATE TABLE {$table_name} (
-    id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('{$table_name}_id_seq'::regclass),
-    a INT NOT NULL,
-    b INT NOT NULL
-);
-SQL;
-        $yo_pdo->queryMultiple($sql);
-
-        return $table_name;
-    }
-
-    /**
-     * @param YoPdo $yo_pdo
-     * @param $table_name
-     * @param array $rows
-     */
-    private function populateTable(YoPdo $yo_pdo, $table_name, array $rows)
-    {
-        foreach ($rows as $row) {
-            $yo_pdo->insert($table_name, $row);
-        }
-    }
-
-    /**
-     * @param YoPdo $yo_pdo
-     * @param array $rows
-     * @return string
-     */
-    private function createPopulatedTable(YoPdo $yo_pdo, array $rows)
-    {
-        $table_name = $this->createTable($yo_pdo);
-        $this->populateTable($yo_pdo, $table_name, $rows);
-
-        return $table_name;
-    }
-
-    /**
-     * @param YoPdo $yo_pdo
      * @param callable $run_update
      */
     private function assertUpdated(YoPdo $yo_pdo, $run_update)
     {
         $rows = $this->getSampleRows();
-        $table_name = $this->createPopulatedTable($yo_pdo, $rows);
+        $table_name = $this->sample_table_creator->createPopulatedTable($yo_pdo, $rows);
 
         $expected = $rows;
         $expected[2] = $run_update($table_name, 'id = 2');
