@@ -2,12 +2,23 @@
 
 namespace Lstr\YoPdo;
 
+use Lstr\YoPdo\TestUtil\QueryResultAsserter;
 use PDO;
 use PDOException;
 use PHPUnit_Framework_TestCase;
 
 class YoPdoTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var QueryResultAsserter
+     */
+    private $query_result_asserter;
+
+    public function setUp()
+    {
+        $this->query_result_asserter = new QueryResultAsserter($this);
+    }
+
     public function testPdoConnectionCanBeRetrieved()
     {
         $config = $this->getConfig();
@@ -96,7 +107,7 @@ SQL;
         );
         $yo_pdo->queryMultiple($sql, $params);
 
-        $this->assertResults($yo_pdo, $table_name, array(
+        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array(
             1 => array('a' => $params['row_1_col_a'], 'b' => $params['row_1_col_b']),
             2 => array('a' => $params['row_2_col_a'],'b' => $params['row_2_col_b']),
             3 => array('a' => $params['last_row_col_a'], 'b' => $params['last_row_col_b']),
@@ -115,7 +126,7 @@ SQL;
             $yo_pdo->insert($table_name, $row);
         }
 
-        $this->assertResults($yo_pdo, $table_name, $rows);
+        $this->query_result_asserter->assertResults($yo_pdo, $table_name, $rows);
     }
 
     /**
@@ -189,7 +200,7 @@ SQL;
             array('id' => 2)
         );
 
-        $this->assertResults($yo_pdo, $table_name, $expected);
+        $this->query_result_asserter->assertResults($yo_pdo, $table_name, $expected);
     }
 
     /**
@@ -272,34 +283,7 @@ SQL;
         $expected = $rows;
         $expected[2] = $run_update($table_name, 'id = 2');
 
-        $this->assertResults($yo_pdo, $table_name, $expected);
-    }
-
-    /**
-     * @param YoPdo $yo_pdo
-     * @param string $table_name
-     * @param array $expected_results
-     * @return array
-     */
-    private function assertResults(YoPdo $yo_pdo, $table_name, array $expected_results)
-    {
-        $sql = <<<SQL
-SELECT id, a, b
-FROM {$table_name}
-ORDER BY id
-SQL;
-        $result = $yo_pdo->query($sql);
-        while ($row = $result->fetch()) {
-            if (!array_key_exists('id', $row)) {
-                $this->assertTrue(false, "Field 'id' not found in row.");
-            } else if (!array_key_exists($row['id'], $expected_results)) {
-                $this->assertTrue(false, "Row with key '{$row['id']}' not found in expected results.");
-            } else {
-                $expected_result = $expected_results[$row['id']];
-                $expected_result['id'] = $row['id'];
-                $this->assertEquals($expected_result, $row);
-            }
-        }
+        $this->query_result_asserter->assertResults($yo_pdo, $table_name, $expected);
     }
 
     /**
