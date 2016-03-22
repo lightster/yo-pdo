@@ -241,6 +241,25 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider dbProvider
+     */
+    public function testManyPreparedPlaceholdersCanBeUsed($yo_pdo)
+    {
+        $table_name = $this->sample_table_creator->createTable($yo_pdo);
+
+        $bulk_inserter = new BulkInserter($yo_pdo, $table_name, ['a', 'b'], 2500);
+
+        $expected_records = [];
+        for ($i = 0; $i < 5000; $i++) {
+            $record = ['a' => $i, 'b' => 500000 - $i];
+            $bulk_inserter->bufferRecord([$record['a'], $record['b']]);
+            $expected_records[$i + 1] = $record;
+        }
+
+        $this->query_result_asserter->assertResults($yo_pdo, $table_name, $expected_records);
+    }
+
+    /**
      * @return array
      */
     public function dbProvider()
