@@ -211,6 +211,27 @@ SQL;
     }
 
     /**
+     * @dataProvider dbProvider
+     */
+    public function testBulkInserterRetrievedFromYoPdoCanBeUsed($yo_pdo)
+    {
+        $table_name = $this->sample_table_creator->createTable($yo_pdo);
+
+        $bulk_inserter = $yo_pdo->getBulkInserter($table_name, ['a', 'b'], 3);
+        $bulk_inserter->insertRecords([
+            [4, 5],
+            [102, 32],
+            [43, 12],
+        ]);
+
+        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array(
+            1 => array('a' => 4, 'b' => 5),
+            2 => array('a' => 102,'b' => 32),
+            3 => array('a' => 43, 'b' => 12),
+        ));
+    }
+
+    /**
      * @return array
      */
     public function dbProvider()
