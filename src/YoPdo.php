@@ -151,6 +151,17 @@ class YoPdo
     }
 
     /**
+     * @param string $table_name
+     * @param array $columns
+     * @param int $max_buffer_size
+     * @return BulkInserter
+     */
+    public function getBulkInserter($table_name, array $columns, $max_buffer_size = 250)
+    {
+        return new BulkInserter($this, $table_name, $columns, $max_buffer_size);
+    }
+
+    /**
      * @param string $sql
      * @param array $params
      * @param array $options
