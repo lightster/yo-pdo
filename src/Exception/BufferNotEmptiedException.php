@@ -16,6 +16,10 @@ class BufferNotEmptiedException extends RuntimeException
      */
     private $records;
 
+    /**
+     * @param string $table_name
+     * @param array $records
+     */
     public function __construct($table_name, array $records)
     {
         parent::__construct(

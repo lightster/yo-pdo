@@ -21,6 +21,11 @@ class ValueCountMismatchException extends RuntimeException
      */
     private $record;
 
+    /**
+     * @param string $table_name
+     * @param array $columns
+     * @param array $record
+     */
     public function __construct($table_name, array $columns, array $record)
     {
         parent::__construct(
