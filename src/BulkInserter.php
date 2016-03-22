@@ -105,8 +105,8 @@ class BulkInserter
             return;
         }
 
-        $table_name = $this->quoteIdentifiers([$this->table_name]);
-        $columns = $this->quoteIdentifiers($this->columns);
+        $table_name = $this->table_name;
+        $columns = implode(', ', $this->columns);
         $placeholders = $this->getRecordLines(count($this->records));
         $flattened_records = $this->flattenRecords($this->records);
 
@@ -119,20 +119,6 @@ SQL;
         $this->yo_pdo->query($sql, $flattened_records);
 
         $this->records = [];
-    }
-
-    /**
-     * @param array $identifiers
-     * @return string
-     */
-    private function quoteIdentifiers(array $identifiers)
-    {
-        $quoted_identifiers = [];
-        foreach ($identifiers as $identifier) {
-            $quoted_identifiers[] = '"' . str_replace('"', '""', $identifier) . '"';
-        }
-
-        return implode(', ', $quoted_identifiers);
     }
 
     /**
