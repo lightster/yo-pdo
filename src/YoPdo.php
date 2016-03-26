@@ -2,6 +2,7 @@
 
 namespace Lstr\YoPdo;
 
+use Generator;
 use PDO;
 use PDOStatement;
 
@@ -41,7 +42,7 @@ class YoPdo
     /**
      * @param string $sql
      * @param array $params
-     * @return generator
+     * @return Generator
      */
     public function getSelectRowGenerator($sql, array $params = array())
     {
