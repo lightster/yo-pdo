@@ -47,9 +47,10 @@ SQL;
                 if ($expected_result['a'] !== $row['a'] && $expected_result['b'] !== $row['b']) {
                     $this->test_case->assertEquals($expected_result, $row);
                 }
+                unset($expected_results[$row['id']]);
             }
         }
 
-        $this->test_case->assertTrue(true);
+        $this->test_case->assertEmpty($expected_results);
     }
 }
