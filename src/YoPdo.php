@@ -14,6 +14,11 @@ class YoPdo
     private $pdo;
 
     /**
+     * @var Transaction
+     */
+    private $transaction;
+
+    /**
      * @param PDO $pdo
      */
     public function __construct(PDO $pdo)
@@ -27,6 +32,20 @@ class YoPdo
     public function getPdo()
     {
         return $this->pdo;
+    }
+
+    /**
+     * @return Transaction
+     */
+    public function transaction()
+    {
+        if ($this->transaction) {
+            return $this->transaction;
+        }
+
+        $this->transaction = new Transaction($this);
+
+        return $this->transaction;
     }
 
     /**

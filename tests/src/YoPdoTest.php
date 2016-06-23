@@ -37,6 +37,16 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dbProvider
+     */
+    public function testTransactionCanBeRetrieved($yo_pdo)
+    {
+        $this->assertInstanceOf('Lstr\YoPdo\Transaction', $yo_pdo->transaction());
+        $this->assertSame($yo_pdo->transaction(), $yo_pdo->transaction(), 'Reuse transaction object');
+        $this->assertSame($yo_pdo, $yo_pdo->transaction()->getYoPdo());
+    }
+
+    /**
+     * @dataProvider dbProvider
      * @expectedException PDOException
      */
     public function testAnErrorInAQueryThrowsAnException($yo_pdo)
