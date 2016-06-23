@@ -13,7 +13,7 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
     /**
      * @var QueryResultAsserter
      */
-    private $query_result_asserter;
+    private $result_asserter;
 
     /**
      * @var SampleTableCreator
@@ -22,7 +22,7 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->query_result_asserter = new QueryResultAsserter($this);
+        $this->result_asserter = new QueryResultAsserter($this);
         $this->sample_table_creator = new SampleTableCreator();
     }
 
@@ -40,7 +40,7 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
             [43, 12],
         ]);
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array(
+        $this->result_asserter->assertResults($yo_pdo, $table_name, array(
             1 => array('a' => 4, 'b' => 5),
             2 => array('a' => 102,'b' => 32),
             3 => array('a' => 43, 'b' => 12),
@@ -61,7 +61,7 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
             [43, 12],
         ]);
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array(
+        $this->result_asserter->assertResults($yo_pdo, $table_name, array(
             1 => array('a' => 4, 'b' => 5),
             2 => array('a' => 102,'b' => 32),
             3 => array('a' => 43, 'b' => 12),
@@ -108,7 +108,7 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
             [43, 12],
         ]);
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array());
+        $this->result_asserter->assertResults($yo_pdo, $table_name, array());
     }
 
     /**
@@ -125,7 +125,7 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
             [43, 12],
         ]);
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array(
+        $this->result_asserter->assertResults($yo_pdo, $table_name, array(
             1 => array('a' => 4, 'b' => 5),
             2 => array('a' => 102,'b' => 32),
             3 => array('a' => 43, 'b' => 12),
@@ -147,7 +147,7 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
             [43, 12],
         ]);
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array(
+        $this->result_asserter->assertResults($yo_pdo, $table_name, array(
             1 => array('a' => 4, 'b' => 5),
             2 => array('a' => 102,'b' => 32),
         ));
@@ -167,11 +167,11 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
             [102, 32],
         ]);
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array());
+        $this->result_asserter->assertResults($yo_pdo, $table_name, array());
 
         $bulk_inserter->bufferRecord([43, 12]);
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array(
+        $this->result_asserter->assertResults($yo_pdo, $table_name, array(
             1 => array('a' => 4, 'b' => 5),
             2 => array('a' => 102,'b' => 32),
             3 => array('a' => 43, 'b' => 12),
@@ -192,7 +192,7 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
             [102, 32],
         ]);
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array(
+        $this->result_asserter->assertResults($yo_pdo, $table_name, array(
             1 => array('a' => 4, 'b' => 5),
             2 => array('a' => 102,'b' => 32),
         ));
@@ -202,7 +202,7 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
             [27, 24],
         ]);
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array(
+        $this->result_asserter->assertResults($yo_pdo, $table_name, array(
             1 => array('a' => 4, 'b' => 5),
             2 => array('a' => 102,'b' => 32),
             3 => array('a' => 43, 'b' => 12),
@@ -256,7 +256,7 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
             $expected_records[$i + 1] = $record;
         }
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, $expected_records);
+        $this->result_asserter->assertResults($yo_pdo, $table_name, $expected_records);
     }
 
     /**

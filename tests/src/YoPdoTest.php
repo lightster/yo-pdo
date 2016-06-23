@@ -13,7 +13,7 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
     /**
      * @var QueryResultAsserter
      */
-    private $query_result_asserter;
+    private $result_asserter;
 
     /**
      * @var SampleTableCreator
@@ -22,7 +22,7 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->query_result_asserter = new QueryResultAsserter($this);
+        $this->result_asserter = new QueryResultAsserter($this);
         $this->sample_table_creator = new SampleTableCreator();
     }
 
@@ -114,7 +114,7 @@ SQL;
         );
         $yo_pdo->queryMultiple($sql, $params);
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array(
+        $this->result_asserter->assertResults($yo_pdo, $table_name, array(
             1 => array('a' => $params['row_1_col_a'], 'b' => $params['row_1_col_b']),
             2 => array('a' => $params['row_2_col_a'],'b' => $params['row_2_col_b']),
             3 => array('a' => $params['last_row_col_a'], 'b' => $params['last_row_col_b']),
@@ -133,7 +133,7 @@ SQL;
             $yo_pdo->insert($table_name, $row);
         }
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, $rows);
+        $this->result_asserter->assertResults($yo_pdo, $table_name, $rows);
     }
 
     /**
@@ -207,7 +207,7 @@ SQL;
             array('id' => 2)
         );
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, $expected);
+        $this->result_asserter->assertResults($yo_pdo, $table_name, $expected);
     }
 
     /**
@@ -224,7 +224,7 @@ SQL;
             [43, 12],
         ]);
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, array(
+        $this->result_asserter->assertResults($yo_pdo, $table_name, array(
             1 => array('a' => 4, 'b' => 5),
             2 => array('a' => 102,'b' => 32),
             3 => array('a' => 43, 'b' => 12),
@@ -266,7 +266,7 @@ SQL;
         $expected = $rows;
         $expected[2] = $run_update($table_name, 'id = 2');
 
-        $this->query_result_asserter->assertResults($yo_pdo, $table_name, $expected);
+        $this->result_asserter->assertResults($yo_pdo, $table_name, $expected);
     }
 
     /**
