@@ -31,7 +31,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
      */
     public function testTransactionIsCommittedIfNameIsAccepted(YoPdo $yo_pdo)
     {
-        $rows = $this->getSampleRows();
+        $rows = $this->sample_table_creator->getSampleRows();
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
         $yo_pdo->transaction()->begin('outer');
@@ -54,7 +54,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
      */
     public function testTransactionCanBeReused(YoPdo $yo_pdo)
     {
-        $rows = $this->getSampleRows();
+        $rows = $this->sample_table_creator->getSampleRows();
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
         $yo_pdo->transaction()->begin('first');
@@ -79,7 +79,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
      */
     public function testTransactionIsNotCommittedIfNameIsNotAccepted(YoPdo $yo_pdo)
     {
-        $rows = $this->getSampleRows();
+        $rows = $this->sample_table_creator->getSampleRows();
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
         $yo_pdo->transaction()->begin('outer');
@@ -97,7 +97,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
      */
     public function testTransactionIsCommittedIfAllNamesAreAccepted(YoPdo $yo_pdo)
     {
-        $rows = $this->getSampleRows();
+        $rows = $this->sample_table_creator->getSampleRows();
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
         $yo_pdo->transaction()->begin('outer');
@@ -122,7 +122,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
      */
     public function testTransactionIsNotCommittedIfNotAllNamesAreAccepted(YoPdo $yo_pdo)
     {
-        $rows = $this->getSampleRows();
+        $rows = $this->sample_table_creator->getSampleRows();
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
         $yo_pdo->transaction()->begin('outer');

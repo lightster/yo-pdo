@@ -136,7 +136,7 @@ SQL;
      */
     public function testInsert($yo_pdo)
     {
-        $rows = $this->getSampleRows();
+        $rows = $this->sample_table_creator->getSampleRows();
 
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
         foreach ($rows as $row) {
@@ -205,7 +205,7 @@ SQL;
      */
     public function testDeleteRecord($yo_pdo)
     {
-        $rows = $this->getSampleRows();
+        $rows = $this->sample_table_creator->getSampleRows();
         $table_name = $this->sample_table_creator->createPopulatedTable($yo_pdo, $rows);
 
         $expected = $rows;
@@ -270,24 +270,12 @@ SQL;
      */
     private function assertUpdated(YoPdo $yo_pdo, $run_update)
     {
-        $rows = $this->getSampleRows();
+        $rows = $this->sample_table_creator->getSampleRows();
         $table_name = $this->sample_table_creator->createPopulatedTable($yo_pdo, $rows);
 
         $expected = $rows;
         $expected[2] = $run_update($table_name, 'id = 2');
 
         $this->result_asserter->assertResults($yo_pdo, $table_name, $expected);
-    }
-
-    /**
-     * @return array
-     */
-    private function getSampleRows()
-    {
-        return array(
-            1 => array('a' => 3, 'b' => 6),
-            2 => array('a' => 2, 'b' => 4),
-            3 => array('a' => 1, 'b' => 2),
-        );
     }
 }
