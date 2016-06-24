@@ -37,6 +37,16 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dbProvider
+     */
+    public function testTransactionCanBeRetrieved($yo_pdo)
+    {
+        $this->assertInstanceOf('Lstr\YoPdo\Transaction', $yo_pdo->transaction());
+        $this->assertSame($yo_pdo->transaction(), $yo_pdo->transaction(), 'Reuse transaction object');
+        $this->assertSame($yo_pdo, $yo_pdo->transaction()->getYoPdo());
+    }
+
+    /**
+     * @dataProvider dbProvider
      * @expectedException PDOException
      */
     public function testAnErrorInAQueryThrowsAnException($yo_pdo)
@@ -126,7 +136,7 @@ SQL;
      */
     public function testInsert($yo_pdo)
     {
-        $rows = $this->getSampleRows();
+        $rows = $this->sample_table_creator->getSampleRows();
 
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
         foreach ($rows as $row) {
@@ -195,7 +205,7 @@ SQL;
      */
     public function testDeleteRecord($yo_pdo)
     {
-        $rows = $this->getSampleRows();
+        $rows = $this->sample_table_creator->getSampleRows();
         $table_name = $this->sample_table_creator->createPopulatedTable($yo_pdo, $rows);
 
         $expected = $rows;
@@ -260,24 +270,12 @@ SQL;
      */
     private function assertUpdated(YoPdo $yo_pdo, $run_update)
     {
-        $rows = $this->getSampleRows();
+        $rows = $this->sample_table_creator->getSampleRows();
         $table_name = $this->sample_table_creator->createPopulatedTable($yo_pdo, $rows);
 
         $expected = $rows;
         $expected[2] = $run_update($table_name, 'id = 2');
 
         $this->result_asserter->assertResults($yo_pdo, $table_name, $expected);
-    }
-
-    /**
-     * @return array
-     */
-    private function getSampleRows()
-    {
-        return array(
-            1 => array('a' => 3, 'b' => 6),
-            2 => array('a' => 2, 'b' => 4),
-            3 => array('a' => 1, 'b' => 2),
-        );
     }
 }

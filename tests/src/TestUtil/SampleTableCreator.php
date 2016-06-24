@@ -40,6 +40,18 @@ SQL;
     }
 
     /**
+     * @return array
+     */
+    public function getSampleRows()
+    {
+        return array(
+            1 => array('a' => 3, 'b' => 6),
+            2 => array('a' => 2, 'b' => 4),
+            3 => array('a' => 1, 'b' => 2),
+        );
+    }
+
+    /**
      * @param YoPdo $yo_pdo
      * @param $table_name
      * @param array $rows
