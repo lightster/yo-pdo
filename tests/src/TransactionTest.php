@@ -2,6 +2,7 @@
 
 namespace Lstr\YoPdo;
 
+use Lstr\YoPdo\Exception\UnknownTransactionNameException;
 use Lstr\YoPdo\TestUtil\QueryResultAsserter;
 use Lstr\YoPdo\TestUtil\SampleTableCreator;
 use PDOException;
@@ -170,6 +171,53 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
+     */
+    public function testRollbackAllRollsBackTheTransaction(YoPdo $yo_pdo)
+    {
+        $rows = $this->sample_table_creator->getSampleRows();
+        $table_name = $this->sample_table_creator->createTable($yo_pdo);
+
+        $yo_pdo->transaction()->begin('outer');
+        $yo_pdo->insert($table_name, $rows[1]);
+
+        $yo_pdo->transaction()->rollbackAll();
+
+        $this->result_asserter->assertResults($yo_pdo, $table_name, []);
+    }
+
+    /**
+     * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
+     */
+    public function testRollbackAllEndsAllNames(YoPdo $yo_pdo)
+    {
+        $rows = $this->sample_table_creator->getSampleRows();
+        $table_name = $this->sample_table_creator->createTable($yo_pdo);
+
+        $yo_pdo->transaction()->begin('outer');
+        $yo_pdo->transaction()->begin('inner');
+        $yo_pdo->insert($table_name, $rows[1]);
+
+        $yo_pdo->transaction()->rollbackAll();
+
+        $this->assertUnknownTransactionNameException($yo_pdo, 'inner');
+        $this->assertUnknownTransactionNameException($yo_pdo, 'outer');
+    }
+
+    /**
+     * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
+     */
+    public function testRollbackAllDoesNothingIfThereAreNoNamesToRollback(YoPdo $yo_pdo)
+    {
+        $yo_pdo->transaction()->rollbackAll();
+
+        $this->assertTrue(true);
+    }
+
+    /**
      * @return array
      */
     public function dbProvider()
@@ -190,5 +238,20 @@ class TransactionTest extends PHPUnit_Framework_TestCase
         $config = require __DIR__ . '/../config/config.php';
 
         return $config['database'];
+    }
+
+    /**
+     * @param YoPdo $yo_pdo
+     * @param string $name
+     * @throws Exception\TransactionAcceptanceOrderException
+     */
+    private function assertUnknownTransactionNameException(YoPdo $yo_pdo, $name)
+    {
+        try {
+            $yo_pdo->transaction()->accept($name);
+            $this->fail("'{$name}' transaction should not be defined");
+        } catch (UnknownTransactionNameException $exception) {
+            $this->assertTrue(true);
+        }
     }
 }

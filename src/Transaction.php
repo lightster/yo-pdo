@@ -80,4 +80,16 @@ class Transaction
             $this->yo_pdo->query('COMMIT');
         }
     }
+
+    public function rollbackAll()
+    {
+        if (null === $this->current_name) {
+            return;
+        }
+
+        $this->names = [];
+        $this->current_name = null;
+
+        $this->yo_pdo->query('ROLLBACK');
+    }
 }
