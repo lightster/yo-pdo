@@ -5,8 +5,14 @@ namespace Lstr\YoPdo;
 use PDOException;
 use PHPUnit_Framework_TestCase;
 
+/**
+ * @coversDefaultClass \Lstr\YoPdo\Factory
+ */
 class FactoryTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @covers ::createFromConfig
+     */
     public function testYoPdoCanBeCreatedFromConfigArray()
     {
         $factory = new Factory();

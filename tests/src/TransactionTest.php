@@ -8,6 +8,9 @@ use Lstr\YoPdo\TestUtil\SampleTableCreator;
 use PDOException;
 use PHPUnit_Framework_TestCase;
 
+/**
+ * @coversDefaultClass \Lstr\YoPdo\Transaction
+ */
 class TransactionTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -27,6 +30,21 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::__construct
+     * @covers ::getYoPdo
+     */
+    public function testYoPdoObjectReturnedIsSamePassedToConstructor()
+    {
+        $factory = new Factory();
+        $yo_pdo = $factory->createFromConfig($this->getConfig());
+        $transaction = new Transaction($yo_pdo);
+
+        $this->assertSame($yo_pdo, $transaction->getYoPdo());
+    }
+
+    /**
+     * @covers ::begin
+     * @covers ::accept
      * @dataProvider dbProvider
      * @param YoPdo $yo_pdo
      */
@@ -50,6 +68,8 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::begin
+     * @covers ::accept
      * @dataProvider dbProvider
      * @param YoPdo $yo_pdo
      */
@@ -75,6 +95,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::begin
      * @dataProvider dbProvider
      * @param YoPdo $yo_pdo
      */
@@ -93,6 +114,8 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::begin
+     * @covers ::accept
      * @dataProvider dbProvider
      * @param YoPdo $yo_pdo
      */
@@ -118,6 +141,8 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::begin
+     * @covers ::accept
      * @dataProvider dbProvider
      * @param YoPdo $yo_pdo
      */
@@ -138,6 +163,8 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::begin
+     * @covers ::accept
      * @dataProvider dbProvider
      * @param YoPdo $yo_pdo
      * @expectedException \Lstr\YoPdo\Exception\TransactionAcceptanceOrderException
@@ -150,6 +177,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::begin
      * @dataProvider dbProvider
      * @param YoPdo $yo_pdo
      * @expectedException \Lstr\YoPdo\Exception\DuplicateTransactionNameException
@@ -161,6 +189,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::accept
      * @dataProvider dbProvider
      * @param YoPdo $yo_pdo
      * @expectedException \Lstr\YoPdo\Exception\UnknownTransactionNameException
@@ -171,6 +200,8 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::begin
+     * @covers ::rollbackAll
      * @dataProvider dbProvider
      * @param YoPdo $yo_pdo
      */
@@ -188,6 +219,8 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::begin
+     * @covers ::rollbackAll
      * @dataProvider dbProvider
      * @param YoPdo $yo_pdo
      */
@@ -207,6 +240,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::rollbackAll
      * @dataProvider dbProvider
      * @param YoPdo $yo_pdo
      */

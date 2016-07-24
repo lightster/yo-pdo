@@ -4,9 +4,13 @@ namespace Lstr\YoPdo\Exception;
 
 use PHPUnit_Framework_TestCase;
 
+/**
+ * @coversDefaultClass \Lstr\YoPdo\Exception\TransactionAcceptanceOrderException
+ */
 class TransactionAcceptanceOrderExceptionTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @covers ::__construct
      * @expectedException Lstr\YoPdo\Exception\TransactionAcceptanceOrderException
      */
     public function testExceptionIsThrowable()
@@ -14,6 +18,10 @@ class TransactionAcceptanceOrderExceptionTest extends PHPUnit_Framework_TestCase
         throw new TransactionAcceptanceOrderException('expected', 'actual');
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::getExpectedTransactionName
+     */
     public function testExpectedTransactionNameIsRetrievable()
     {
         $expected = 'expected_' . uniqid();
@@ -23,6 +31,10 @@ class TransactionAcceptanceOrderExceptionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $exception->getExpectedTransactionName());
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::getActualTransactionName
+     */
     public function testActualTransactionNameIsRetrievable()
     {
         $expected = 'expected_' . uniqid();

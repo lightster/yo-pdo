@@ -5,9 +5,13 @@ namespace Lstr\YoPdo;
 use Lstr\YoPdo\Exception\ValueCountMismatchException;
 use PHPUnit_Framework_TestCase;
 
+/**
+ * @coversDefaultClass \Lstr\YoPdo\Exception\ValueCountMismatchException
+ */
 class ValueCountMismatchExceptionTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @covers ::__construct
      * @expectedException Lstr\YoPdo\Exception\ValueCountMismatchException
      */
     public function testExceptionIsThrowable()
@@ -19,6 +23,10 @@ class ValueCountMismatchExceptionTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::getTableName
+     */
     public function testTableNameIsRetrievable()
     {
         $expected_table_name = 'some_table_' . uniqid();
@@ -31,6 +39,10 @@ class ValueCountMismatchExceptionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected_table_name, $exception->getTableName());
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::getColumns
+     */
     public function testColumnsRetrievable()
     {
         $expected_columns = ['a', 'b', 'z'];
@@ -43,6 +55,10 @@ class ValueCountMismatchExceptionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected_columns, $exception->getColumns());
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::getRecord
+     */
     public function testRecordIsRetrievable()
     {
         $expected_record = [

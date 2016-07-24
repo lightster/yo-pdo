@@ -8,6 +8,9 @@ use PDO;
 use PDOException;
 use PHPUnit_Framework_TestCase;
 
+/**
+ * @coversDefaultClass \Lstr\YoPdo\YoPdo
+ */
 class YoPdoTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -26,6 +29,10 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
         $this->sample_table_creator = new SampleTableCreator();
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::getPdo
+     */
     public function testPdoConnectionCanBeRetrieved()
     {
         $config = $this->getConfig();
@@ -36,6 +43,7 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::transaction
      * @dataProvider dbProvider
      */
     public function testTransactionCanBeRetrieved($yo_pdo)
@@ -46,6 +54,8 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::query
+     * @covers ::<private>
      * @dataProvider dbProvider
      * @expectedException PDOException
      */
@@ -55,6 +65,8 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::query
+     * @covers ::<private>
      * @dataProvider dbProvider
      */
     public function testASimpleQueryCanBeRan($yo_pdo)
@@ -79,6 +91,7 @@ SQL;
     }
 
     /**
+     * @covers ::getSelectRowGenerator
      * @dataProvider dbProvider
      */
     public function testARowGeneratorCanBeUsed($yo_pdo)
@@ -103,6 +116,8 @@ SQL;
     }
 
     /**
+     * @covers ::queryMultiple
+     * @covers ::<private>
      * @dataProvider dbProvider
      */
     public function testMultipleQueriesCanBeRan($yo_pdo)
@@ -132,6 +147,7 @@ SQL;
     }
 
     /**
+     * @covers ::insert
      * @dataProvider dbProvider
      */
     public function testInsert($yo_pdo)
@@ -147,6 +163,8 @@ SQL;
     }
 
     /**
+     * @covers ::insert
+     * @covers ::getLastInsertId
      * @dataProvider dbProvider
      */
     public function testLastInsertIdCanBeRetrieved($yo_pdo)
@@ -159,6 +177,7 @@ SQL;
     }
 
     /**
+     * @covers ::update
      * @dataProvider dbProvider
      */
     public function testUpdateRecordsUsingCustomPlaceholderNames($yo_pdo)
@@ -179,6 +198,7 @@ SQL;
     }
 
     /**
+     * @covers ::update
      * @dataProvider dbProvider
      */
     public function testUpdateRecordsUsingColumnNamesAsPlaceholderNames($yo_pdo)
@@ -203,6 +223,7 @@ SQL;
     }
 
     /**
+     * @covers ::delete
      * @dataProvider dbProvider
      */
     public function testDeleteRecord($yo_pdo)
@@ -223,6 +244,7 @@ SQL;
     }
 
     /**
+     * @covers ::getBulkInserter
      * @dataProvider dbProvider
      */
     public function testBulkInserterRetrievedFromYoPdoCanBeUsed($yo_pdo)
