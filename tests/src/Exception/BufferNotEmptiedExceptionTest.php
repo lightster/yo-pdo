@@ -1,13 +1,16 @@
 <?php
 
-namespace Lstr\YoPdo;
+namespace Lstr\YoPdo\Exception;
 
-use Lstr\YoPdo\Exception\BufferNotEmptiedException;
 use PHPUnit_Framework_TestCase;
 
+/**
+ * @coversDefaultClass \Lstr\YoPdo\Exception\BufferNotEmptiedException
+ */
 class BufferNotEmptiedExceptionTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @covers ::__construct
      * @expectedException Lstr\YoPdo\Exception\BufferNotEmptiedException
      */
     public function testExceptionIsThrowable()
@@ -15,6 +18,10 @@ class BufferNotEmptiedExceptionTest extends PHPUnit_Framework_TestCase
         throw new BufferNotEmptiedException("some_table", [['a', '1', true]]);
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::getTableName
+     */
     public function testTableNameIsRetrievable()
     {
         $expected_table_name = 'some_table_' . uniqid();
@@ -26,6 +33,10 @@ class BufferNotEmptiedExceptionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected_table_name, $exception->getTableName());
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::getRecords
+     */
     public function testRecordsAreRetrievable()
     {
         $expected_records = [
