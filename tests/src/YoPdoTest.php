@@ -136,14 +136,14 @@ SQL;
      */
     public function testInsert($yo_pdo)
     {
-        $rows = $this->sample_table_creator->getSampleRows();
+        list($rows, $expected) = $this->sample_table_creator->getSampleRowsForUpsert();
 
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
         foreach ($rows as $row) {
             $yo_pdo->insert($table_name, $row);
         }
 
-        $this->result_asserter->assertResults($yo_pdo, $table_name, $rows);
+        $this->result_asserter->assertResults($yo_pdo, $table_name, $expected);
     }
 
     /**

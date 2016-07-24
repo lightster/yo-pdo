@@ -101,15 +101,21 @@ class YoPdo
      */
     public function insert($tablename, array $values)
     {
-        $columns      = array();
-        $placeholders = array();
-        foreach ($values as $column => $value) {
-            $columns[]      = $column;
-            $placeholders[] = ":{$column}";
-        }
+        $columns = $expressions = $processed_values = [];
+        array_walk($values, function ($value, $column) use (&$columns, &$expressions, &$processed_values) {
+            $columns[] = $column;
+
+            if ($value instanceof ExpressionValue) {
+                $expressions[] = $value->getString();
+                return;
+            }
+
+            $expressions[] = ":{$column}";
+            $processed_values[] = $value;
+        });
 
         $column_sql      = implode(",\n", $columns);
-        $placeholder_sql = implode(",\n", $placeholders);
+        $expression_sql = implode(",\n", $expressions);
 
         $this->query(
             "
@@ -119,10 +125,10 @@ class YoPdo
                 )
                 VALUES
                 (
-                    {$placeholder_sql}
+                    {$expression_sql}
                 )
             ",
-            $values
+            $processed_values
         );
     }
 
