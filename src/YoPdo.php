@@ -101,15 +101,21 @@ class YoPdo
      */
     public function insert($tablename, array $values)
     {
-        $columns      = array();
-        $placeholders = array();
-        foreach ($values as $column => $value) {
-            $columns[]      = $column;
-            $placeholders[] = ":{$column}";
-        }
+        $columns = $expressions = $processed_values = [];
+        array_walk($values, function ($value, $column) use (&$columns, &$expressions, &$processed_values) {
+            $columns[] = $column;
+
+            if ($value instanceof ExpressionValue) {
+                $expressions[] = $value->getString();
+                return;
+            }
+
+            $expressions[] = ":{$column}";
+            $processed_values[] = $value;
+        });
 
         $column_sql      = implode(",\n", $columns);
-        $placeholder_sql = implode(",\n", $placeholders);
+        $expression_sql = implode(",\n", $expressions);
 
         $this->query(
             "
@@ -119,10 +125,10 @@ class YoPdo
                 )
                 VALUES
                 (
-                    {$placeholder_sql}
+                    {$expression_sql}
                 )
             ",
-            $values
+            $processed_values
         );
     }
 
@@ -134,13 +140,21 @@ class YoPdo
      */
     public function update($tablename, array $set_cols, $where_sql, array $values)
     {
-        $sets = array();
-        foreach ($set_cols as $column => $placeholder) {
+        $sets = $processed_values = array();
+        array_walk($set_cols, function ($placeholder, $column) use ($values, &$sets, &$processed_values) {
             if (is_numeric($column)) {
                 $column = $placeholder;
             }
+
+            if (isset($values[$placeholder]) && $values[$placeholder] instanceof ExpressionValue) {
+                $value = $values[$placeholder]->getString();
+                $sets[] = "{$column} = {$value}";
+                return;
+            }
+
             $sets[] = "{$column} = :{$placeholder}";
-        }
+            $processed_values[$placeholder] = $values[$placeholder];
+        });
 
         $set_sql = implode(",\n", $sets);
 
@@ -150,7 +164,7 @@ class YoPdo
                 SET {$set_sql}
                 WHERE {$where_sql}
             ",
-            $values
+            $processed_values
         );
     }
 
