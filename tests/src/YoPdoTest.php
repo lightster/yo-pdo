@@ -168,12 +168,12 @@ SQL;
             function ($table_name, $condition) use ($yo_pdo) {
                 $yo_pdo->update(
                     $table_name,
-                    array('a' => 'some_number', 'b' => 'some_number'),
+                    array('a' => 'some_number', 'b' => 'some_number', 'c' => 'some_expression'),
                     $condition,
-                    array('some_number' => 112)
+                    array('some_number' => 112, 'some_expression' => new ExpressionValue('5 + 2'))
                 );
 
-                return array('a' => 112, 'b' => 112);
+                return array('a' => 112, 'b' => 112, 'c' => 7);
             }
         );
     }
@@ -186,15 +186,17 @@ SQL;
         $this->assertUpdated(
             $yo_pdo,
             function ($table_name, $condition) use ($yo_pdo) {
-                $expected = array('a' => 102, 'b' => 120);
+                $values = array('a' => 102, 'b' => 120, 'c' => new ExpressionValue('5 + 2'));
 
                 $yo_pdo->update(
                     $table_name,
-                    array('a', 'b'),
+                    array('a', 'b', 'c'),
                     $condition,
-                    $expected
+                    $values
                 );
 
+                $expected = $values;
+                $expected['c'] = 7;
                 return $expected;
             }
         );
@@ -270,10 +272,9 @@ SQL;
      */
     private function assertUpdated(YoPdo $yo_pdo, $run_update)
     {
-        $rows = $this->sample_table_creator->getSampleRows();
+        list($rows, $expected) = $this->sample_table_creator->getSampleRowsForUpsert();
         $table_name = $this->sample_table_creator->createPopulatedTable($yo_pdo, $rows);
 
-        $expected = $rows;
         $expected[2] = $run_update($table_name, 'id = 2');
 
         $this->result_asserter->assertResults($yo_pdo, $table_name, $expected);

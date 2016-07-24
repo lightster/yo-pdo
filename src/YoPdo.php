@@ -140,13 +140,21 @@ class YoPdo
      */
     public function update($tablename, array $set_cols, $where_sql, array $values)
     {
-        $sets = array();
-        foreach ($set_cols as $column => $placeholder) {
+        $sets = $processed_values = array();
+        array_walk($set_cols, function ($placeholder, $column) use ($values, &$sets, &$processed_values) {
             if (is_numeric($column)) {
                 $column = $placeholder;
             }
+
+            if (isset($values[$placeholder]) && $values[$placeholder] instanceof ExpressionValue) {
+                $value = $values[$placeholder]->getString();
+                $sets[] = "{$column} = {$value}";
+                return;
+            }
+
             $sets[] = "{$column} = :{$placeholder}";
-        }
+            $processed_values[$placeholder] = $values[$placeholder];
+        });
 
         $set_sql = implode(",\n", $sets);
 
@@ -156,7 +164,7 @@ class YoPdo
                 SET {$set_sql}
                 WHERE {$where_sql}
             ",
-            $values
+            $processed_values
         );
     }
 
