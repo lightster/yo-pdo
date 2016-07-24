@@ -35,8 +35,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
      * @covers ::insertRecords
      * @covers ::<private>
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testBulkInserterCanInsertRecords($yo_pdo)
+    public function testBulkInserterCanInsertRecords(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
@@ -59,8 +60,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
      * @covers ::insertRecords
      * @covers ::<private>
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testBulkInserterCanInsertTheExactNumberOfRecordsThatFitsInTheBuffer($yo_pdo)
+    public function testBulkInserterCanInsertTheExactNumberOfRecordsThatFitsInTheBuffer(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
@@ -84,8 +86,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
      * @covers ::__destruct
      * @dataProvider dbProvider
      * @expectedException Lstr\YoPdo\Exception\BufferNotEmptiedException
+     * @param YoPdo $yo_pdo
      */
-    public function testBulkInserterThrowsAnExceptionWhenBufferNotEmptied($yo_pdo)
+    public function testBulkInserterThrowsAnExceptionWhenBufferNotEmptied(YoPdo $yo_pdo)
     {
         $bulk_inserter = new BulkInserter($yo_pdo, 'anything', ['a', 'b'], 250);
         $bulk_inserter->bufferRecord([1, 2]);
@@ -97,8 +100,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
      * @covers ::bufferRecord
      * @covers ::destroyBuffer
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testBulkInserterBufferCanBeDestroyed($yo_pdo)
+    public function testBulkInserterBufferCanBeDestroyed(YoPdo $yo_pdo)
     {
         $bulk_inserter = new BulkInserter($yo_pdo, 'anything', ['a', 'b'], 250);
         $bulk_inserter->bufferRecord([1, 2]);
@@ -113,8 +117,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
      * @covers ::bufferRecords
      * @dataProvider dbProvider
      * @expectedException Lstr\YoPdo\Exception\BufferNotEmptiedException
+     * @param YoPdo $yo_pdo
      */
-    public function testRecordsCanBeBufferedWithoutBeingInserted($yo_pdo)
+    public function testRecordsCanBeBufferedWithoutBeingInserted(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
@@ -134,8 +139,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
      * @covers ::insertRecords
      * @covers ::<private>
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testBufferIsAutomaticallyInsertedWhenBufferingAsManyRowsAsBufferCanHold($yo_pdo)
+    public function testBufferIsAutomaticallyInsertedWhenBufferingAsManyRowsAsBufferCanHold(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
@@ -160,8 +166,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
      * @covers ::<private>
      * @dataProvider dbProvider
      * @expectedException Lstr\YoPdo\Exception\BufferNotEmptiedException
+     * @param YoPdo $yo_pdo
      */
-    public function testBufferIsAutomaticallyInsertedWhenBufferingMoreRowsThanBufferCanHold($yo_pdo)
+    public function testBufferIsAutomaticallyInsertedWhenBufferingMoreRowsThanBufferCanHold(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
@@ -185,8 +192,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
      * @covers ::insertRecords
      * @covers ::<private>
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testBulkInserterInsertsWhenBufferingRecordThatCausesLimitToBeHit($yo_pdo)
+    public function testBulkInserterInsertsWhenBufferingRecordThatCausesLimitToBeHit(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
@@ -212,8 +220,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
      * @covers ::insertRecords
      * @covers ::<private>
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testBulkInserterCanInsertMultipleTimes($yo_pdo)
+    public function testBulkInserterCanInsertMultipleTimes(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
@@ -246,8 +255,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
      * @covers ::bufferRecords
      * @dataProvider dbProvider
      * @expectedException Lstr\YoPdo\Exception\ValueCountMismatchException
+     * @param YoPdo $yo_pdo
      */
-    public function testAnExceptionIsThrownWhenBulkInserterHasMoreColumnsThanRecord($yo_pdo)
+    public function testAnExceptionIsThrownWhenBulkInserterHasMoreColumnsThanRecord(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
@@ -261,8 +271,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider dbProvider
      * @expectedException Lstr\YoPdo\Exception\ValueCountMismatchException
+     * @param YoPdo $yo_pdo
      */
-    public function testAnExceptionIsThrownWhenBulkInserterHasFewerColumnsThanRecord($yo_pdo)
+    public function testAnExceptionIsThrownWhenBulkInserterHasFewerColumnsThanRecord(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
@@ -276,8 +287,9 @@ class BulkInserterTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::bufferRecord
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testManyPreparedPlaceholdersCanBeUsed($yo_pdo)
+    public function testManyPreparedPlaceholdersCanBeUsed(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 

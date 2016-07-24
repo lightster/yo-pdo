@@ -45,8 +45,9 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::transaction
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testTransactionCanBeRetrieved($yo_pdo)
+    public function testTransactionCanBeRetrieved(YoPdo $yo_pdo)
     {
         $this->assertInstanceOf('Lstr\YoPdo\Transaction', $yo_pdo->transaction());
         $this->assertSame($yo_pdo->transaction(), $yo_pdo->transaction(), 'Reuse transaction object');
@@ -58,8 +59,9 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
      * @covers ::<private>
      * @dataProvider dbProvider
      * @expectedException PDOException
+     * @param YoPdo $yo_pdo
      */
-    public function testAnErrorInAQueryThrowsAnException($yo_pdo)
+    public function testAnErrorInAQueryThrowsAnException(YoPdo $yo_pdo)
     {
         $yo_pdo->query('SELECT oops');
     }
@@ -68,8 +70,9 @@ class YoPdoTest extends PHPUnit_Framework_TestCase
      * @covers ::query
      * @covers ::<private>
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testASimpleQueryCanBeRan($yo_pdo)
+    public function testASimpleQueryCanBeRan(YoPdo $yo_pdo)
     {
         $sql = <<<SQL
 SELECT :param_a AS col UNION
@@ -93,8 +96,9 @@ SQL;
     /**
      * @covers ::getSelectRowGenerator
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testARowGeneratorCanBeUsed($yo_pdo)
+    public function testARowGeneratorCanBeUsed(YoPdo $yo_pdo)
     {
         $sql = <<<SQL
 SELECT :param_a AS col UNION
@@ -119,8 +123,9 @@ SQL;
      * @covers ::queryMultiple
      * @covers ::<private>
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testMultipleQueriesCanBeRan($yo_pdo)
+    public function testMultipleQueriesCanBeRan(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
         $sql = <<<SQL
@@ -149,8 +154,9 @@ SQL;
     /**
      * @covers ::insert
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testInsert($yo_pdo)
+    public function testInsert(YoPdo $yo_pdo)
     {
         list($rows, $expected) = $this->sample_table_creator->getSampleRowsForUpsert();
 
@@ -166,8 +172,9 @@ SQL;
      * @covers ::insert
      * @covers ::getLastInsertId
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testLastInsertIdCanBeRetrieved($yo_pdo)
+    public function testLastInsertIdCanBeRetrieved(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
         for ($i = 1; $i <= 3; $i++) {
@@ -179,8 +186,9 @@ SQL;
     /**
      * @covers ::update
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testUpdateRecordsUsingCustomPlaceholderNames($yo_pdo)
+    public function testUpdateRecordsUsingCustomPlaceholderNames(YoPdo $yo_pdo)
     {
         $this->assertUpdated(
             $yo_pdo,
@@ -200,8 +208,9 @@ SQL;
     /**
      * @covers ::update
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testUpdateRecordsUsingColumnNamesAsPlaceholderNames($yo_pdo)
+    public function testUpdateRecordsUsingColumnNamesAsPlaceholderNames(YoPdo $yo_pdo)
     {
         $this->assertUpdated(
             $yo_pdo,
@@ -225,8 +234,9 @@ SQL;
     /**
      * @covers ::delete
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testDeleteRecord($yo_pdo)
+    public function testDeleteRecord(YoPdo $yo_pdo)
     {
         $rows = $this->sample_table_creator->getSampleRows();
         $table_name = $this->sample_table_creator->createPopulatedTable($yo_pdo, $rows);
@@ -246,8 +256,9 @@ SQL;
     /**
      * @covers ::getBulkInserter
      * @dataProvider dbProvider
+     * @param YoPdo $yo_pdo
      */
-    public function testBulkInserterRetrievedFromYoPdoCanBeUsed($yo_pdo)
+    public function testBulkInserterRetrievedFromYoPdoCanBeUsed(YoPdo $yo_pdo)
     {
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
 
