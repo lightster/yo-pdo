@@ -28,8 +28,13 @@ class QueryResultAsserter
      */
     public function assertResults(YoPdo $yo_pdo, $table_name, array $expected_results)
     {
+        $column_sql = '';
+        if ($expected_results && reset($expected_results)) {
+            $column_sql = ', ' . implode(', ', array_keys(reset($expected_results)));
+        }
+
         $sql = <<<SQL
-SELECT id, a, b
+SELECT id {$column_sql}
 FROM {$table_name}
 ORDER BY id
 SQL;
@@ -44,7 +49,8 @@ SQL;
                 );
             } else {
                 $expected_result = $expected_results[$row['id']];
-                if ($expected_result['a'] !== $row['a'] && $expected_result['b'] !== $row['b']) {
+                $expected_result['id'] = $row['id'];
+                if (array_diff_assoc($expected_result, $row) || array_diff_assoc($row, $expected_result)) {
                     $this->test_case->assertEquals($expected_result, $row);
                 }
                 unset($expected_results[$row['id']]);
