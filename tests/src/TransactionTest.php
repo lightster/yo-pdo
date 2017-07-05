@@ -59,12 +59,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
         $yo_pdo->insert($table_name, $rows[3]);
         $yo_pdo->transaction()->accept('outer');
 
-        try {
-            // make sure an error occurred so we know the results were committed
-            $yo_pdo->query('SELECT oops');
-        } catch (PDOException $exception) {
-            $this->result_asserter->assertResults($yo_pdo, $table_name, $rows);
-        }
+        $this->assertCommittedResults($yo_pdo, $table_name, $rows);
     }
 
     /**
@@ -86,12 +81,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
         $yo_pdo->insert($table_name, $rows[3]);
         $yo_pdo->transaction()->accept('second');
 
-        try {
-            // make sure an error occurred so we know the results were committed
-            $yo_pdo->query('SELECT oops');
-        } catch (PDOException $exception) {
-            $this->result_asserter->assertResults($yo_pdo, $table_name, $rows);
-        }
+        $this->assertCommittedResults($yo_pdo, $table_name, $rows);
     }
 
     /**
@@ -132,12 +122,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
         $yo_pdo->transaction()->accept('inner');
         $yo_pdo->transaction()->accept('outer');
 
-        try {
-            // make sure an error occurred so we know the results were committed
-            $yo_pdo->query('SELECT oops');
-        } catch (PDOException $exception) {
-            $this->result_asserter->assertResults($yo_pdo, $table_name, $rows);
-        }
+        $this->assertCommittedResults($yo_pdo, $table_name, $rows);
     }
 
     /**
@@ -286,6 +271,21 @@ class TransactionTest extends PHPUnit_Framework_TestCase
             $this->fail("'{$name}' transaction should not be defined");
         } catch (UnknownTransactionNameException $exception) {
             $this->assertTrue(true);
+        }
+    }
+
+    /**
+     * @param YoPdo $yo_pdo
+     * @param string $table_name
+     * @param array $rows
+     */
+    private function assertCommittedResults(YoPdo $yo_pdo, $table_name, array $rows)
+    {
+        try {
+            // make sure an error occurred so we know the results were committed
+            $yo_pdo->query('SELECT oops');
+        } catch (PDOException $exception) {
+            $this->result_asserter->assertResults($yo_pdo, $table_name, $rows);
         }
     }
 }
