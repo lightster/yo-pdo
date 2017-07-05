@@ -3,7 +3,8 @@ engines:
     enabled: true
     config:
       languages:
-        - php
+        php:
+          mass_threshold: 40
     exclude_paths:
       - "**.dataset.php"
   fixme:
