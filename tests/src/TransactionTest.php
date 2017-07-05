@@ -113,14 +113,15 @@ class TransactionTest extends PHPUnit_Framework_TestCase
     {
         $rows = $this->sample_table_creator->getSampleRows();
         $table_name = $this->sample_table_creator->createTable($yo_pdo);
+        $transaction = $yo_pdo->transaction();
 
-        $yo_pdo->transaction()->begin('outer');
+        $transaction->begin('outer');
         $yo_pdo->insert($table_name, $rows[1]);
-        $yo_pdo->transaction()->begin('inner');
         $yo_pdo->insert($table_name, $rows[2]);
+        $transaction->begin('inner');
         $yo_pdo->insert($table_name, $rows[3]);
-        $yo_pdo->transaction()->accept('inner');
-        $yo_pdo->transaction()->accept('outer');
+        $transaction->accept('inner');
+        $transaction->accept('outer');
 
         $this->assertCommittedResults($yo_pdo, $table_name, $rows);
     }
